@@ -74,6 +74,9 @@ CModule::EModRet TwitchTMI::OnUserRaw(CString &sLine)
 	if(sLine.Left(9).Equals("JTVCLIENT"))
 		return CModule::HALT;
 
+	if(sLine.Left(8).Equals("USERHOST"))
+		return CModule::HALT;
+
 	return CModule::CONTINUE;
 }
 
