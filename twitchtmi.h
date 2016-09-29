@@ -15,7 +15,7 @@ class TwitchTMI : public CModule
 	friend class TwitchTMIJob;
 
 	public:
-	MODCONSTRUCTOR(TwitchTMI) { lastFrankerZ = 0; }
+	MODCONSTRUCTOR(TwitchTMI) { }
 	virtual ~TwitchTMI();
 
 	bool OnLoad(const CString &sArgsi, CString &sMessage) override;
@@ -36,7 +36,6 @@ class TwitchTMI : public CModule
 
 	private:
 	TwitchTMIUpdateTimer *timer;
-	std::time_t lastFrankerZ;
 	std::unordered_set<CString> liveChannels;
 };
 

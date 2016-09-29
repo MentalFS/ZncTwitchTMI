@@ -36,9 +36,6 @@ bool TwitchTMI::OnLoad(const CString& sArgsi, CString& sMessage)
 		}
 	}
 
-	if(GetArgs().Token(0) != "FrankerZ")
-		lastFrankerZ = std::numeric_limits<decltype(lastFrankerZ)>::max();
-
 	PutIRC("CAP REQ :twitch.tv/membership");
 	PutIRC("CAP REQ :twitch.tv/commands");
 	PutIRC("CAP REQ :twitch.tv/tags");
@@ -164,23 +161,6 @@ CModule::EModRet TwitchTMI::OnChanMessage(CTextMessage &Message)
 {
 	if(Message.GetNick().GetNick().Equals("jtv"))
 		return CModule::HALT;
-
-	if(Message.GetText() == "FrankerZ" && std::time(nullptr) - lastFrankerZ > 10)
-	{
-		std::stringstream ss;
-		CString mynick = GetNetwork()->GetIRCNick().GetNickMask();
-		CChan *chan = Message.GetChan();
-
-		ss << "PRIVMSG " << chan->GetName() << " :FrankerZ";
-		PutIRC(ss.str());
-
-		CThreadPool::Get().addJob(new GenericJob([]() {}, [this, chan, mynick]()
-		{
-			PutUserChanMessage(chan, mynick, "FrankerZ");
-		}));
-
-		lastFrankerZ = std::time(nullptr);
-	}
 
 	return CModule::CONTINUE;
 }
@@ -311,7 +291,7 @@ void TwitchTMIJob::runMain()
 template<> void TModInfo<TwitchTMI>(CModInfo &info)
 {
 	info.SetWikiPage("Twitch");
-	info.SetHasArgs(true);
+	info.SetHasArgs(false);
 }
 
 NETWORKMODULEDEFS(TwitchTMI, "Twitch IRC helper module")
