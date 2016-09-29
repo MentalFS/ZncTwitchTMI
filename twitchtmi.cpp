@@ -126,7 +126,7 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 	}
 
 	CString realNick = msg.GetTag("display-name").Trim_n();
-	if(realNick != "")
+	if(realNick != "" && realNick.Equals(msg.GetNick().GetNick(), CString::CaseInsensitive))
 		msg.GetNick().SetNick(realNick);
 
 	return CModule::CONTINUE;
