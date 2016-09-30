@@ -32,7 +32,7 @@ class TwitchTMI : public CModule
 	bool OnServerCapAvailable(const CString &sCap) override;
 
 	private:
-	void PutUserChanMessage(CChan *chan, const CString &format, const CString &text);
+	void PutModChanNotice(CChan *chan, const CString &text);
 
 	private:
 	TwitchTMIUpdateTimer *timer;

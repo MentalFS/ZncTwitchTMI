@@ -120,9 +120,9 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 	}
 	else if(msg.GetCommand().Equals("USERNOTICE"))
 	{
-		//TODO: Translate Tags to useful message
-		msg.SetCommand("PRIVMSG");
-		msg.SetParam(1, "<<<RESUB>>> " + msg.GetParam(1));
+		msg.SetCommand("NOTICE");
+		msg.GetNick().SetNick(GetModNick());
+		msg.SetParam(1, msg.GetTag("system-msg").Trim_n() + " " + msg.GetParam(1));
 	}
 
 	CString realNick = msg.GetTag("display-name").Trim_n();
@@ -142,16 +142,16 @@ CModule::EModRet TwitchTMI::OnUserJoin(CString& sChannel, CString& sKey)
 
 CModule::EModRet TwitchTMI::OnPrivMessage(CTextMessage &Message)
 {
-	if(Message.GetNick().GetNick().Equals("jtv"))
-		return CModule::HALT;
+//	if(Message.GetNick().GetNick().Equals("jtv"))
+//		return CModule::HALT;
 
 	return CModule::CONTINUE;
 }
 
-void TwitchTMI::PutUserChanMessage(CChan *chan, const CString &from, const CString &msg)
+void TwitchTMI::PutModChanNotice(CChan *chan, const CString &msg)
 {
 	std::stringstream ss;
-	ss << ":" << from << " PRIVMSG " << chan->GetName() << " :";
+	ss << ":" << GetModNick() << " NOTICE " << chan->GetName() << " :";
 	CString s = ss.str();
 
 	PutUser(s + msg);
@@ -162,8 +162,8 @@ void TwitchTMI::PutUserChanMessage(CChan *chan, const CString &from, const CStri
 
 CModule::EModRet TwitchTMI::OnChanMessage(CTextMessage &Message)
 {
-	if(Message.GetNick().GetNick().Equals("jtv"))
-		return CModule::HALT;
+//	if(Message.GetNick().GetNick().Equals("jtv"))
+//		return CModule::HALT;
 
 	return CModule::CONTINUE;
 }
@@ -262,11 +262,11 @@ void TwitchTMIJob::runMain()
 	if(chan->GetTopic() != title)
 	{
 		chan->SetTopic(title);
-		chan->SetTopicOwner("jtv");
+		chan->SetTopicOwner(mod->GetModNick());
 		chan->SetTopicDate((unsigned long)time(nullptr));
 
 		std::stringstream ss;
-		ss << ":jtv TOPIC #" << channel << " :" << title;
+		ss << ":" << mod->GetModNick() << " TOPIC #" << channel << " :" << title;
 
 		mod->PutUser(ss.str());
 	}
@@ -277,7 +277,7 @@ void TwitchTMIJob::runMain()
 		if(!live)
 		{
 			mod->liveChannels.erase(it);
-			mod->PutUserChanMessage(chan, "jtv", ">>> Channel just went offline! <<<");
+			mod->PutModChanNotice(chan, "Channel just went offline!");
 		}
 	}
 	else
@@ -285,7 +285,7 @@ void TwitchTMIJob::runMain()
 		if(live)
 		{
 			mod->liveChannels.insert(channel);
-			mod->PutUserChanMessage(chan, "jtv", ">>> Channel just went live! <<<");
+			mod->PutModChanNotice(chan, "Channel just went live!");
 		}
 	}
 }
