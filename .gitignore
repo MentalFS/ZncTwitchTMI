@@ -6,4 +6,5 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 twitch.so
+*.swp
 
