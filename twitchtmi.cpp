@@ -122,11 +122,21 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 	{
 		msg.SetCommand("NOTICE");
 		msg.GetNick().SetNick(GetModNick());
-		msg.SetParam(1, msg.GetTag("system-msg").Trim_n() + " " + msg.GetParam(1));
+		msg.GetNick().SetIdent("znc");
+		msg.GetNick().SetHost("znc.in");
+		msg.SetParam(1, msg.GetTag("system-msg").Trim_n() + " [" + msg.GetParam(1) + "]");
 	}
 
+	CString nick = msg.GetNick().GetNick();
 	CString realNick = msg.GetTag("display-name").Trim_n();
-	if(realNick != "" && realNick.Equals(msg.GetNick().GetNick(), CString::CaseInsensitive))
+	if (nick.Equals("twitchnotify"))
+		msg.SetCommand("NOTICE");
+	if (nick.Equals("tmi.twitch.tv"))
+	{
+		msg.GetNick().SetIdent("tmi.twitch.tv");
+		msg.GetNick().SetHost("tmi.twitch.tv");
+	}
+	if(realNick != "" && realNick.Equals(nick, CString::CaseInsensitive))
 		msg.GetNick().SetNick(realNick);
 
 	return CModule::CONTINUE;
@@ -151,7 +161,7 @@ CModule::EModRet TwitchTMI::OnPrivMessage(CTextMessage &Message)
 void TwitchTMI::PutModChanNotice(CChan *chan, const CString &msg)
 {
 	std::stringstream ss;
-	ss << ":" << GetModNick() << " NOTICE " << chan->GetName() << " :";
+	ss << ":" << GetModNick() << "!znc@znc.in NOTICE " << chan->GetName() << " :";
 	CString s = ss.str();
 
 	PutUser(s + msg);
