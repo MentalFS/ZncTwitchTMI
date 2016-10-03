@@ -91,7 +91,8 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 		msg.SetCommand("NOTICE");
 		if(msg.GetParam(1) != "")
 		{
-			msg.SetParam(1, msg.GetParam(1) + " was timed out.");
+			msg.SetParam(1, msg.GetParam(1) + " was timed out."
+				+" (" + msg.GetTag("ban-duration") + "s) [" + msg.GetTag("ban-reason") + "]" );
 		}
 		else
 		{
