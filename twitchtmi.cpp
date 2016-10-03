@@ -91,8 +91,11 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 		msg.SetCommand("NOTICE");
 		if(msg.GetParam(1) != "")
 		{
-			msg.SetParam(1, msg.GetParam(1) + " was timed out."
-				+" (" + msg.GetTag("ban-duration") + "s) [" + msg.GetTag("ban-reason") + "]" );
+			CString duration = msg.GetTag("ban-duration");
+			CString reason =  msg.GetTag("ban-reason");
+			if (duration.Equals("")) msg.SetParam(1, msg.GetParam(1) + " was banned." );
+				else msg.SetParam(1, msg.GetParam(1) + " was timed out. (" + duration + "s)" );
+			if (!reason.Equals("")) msg.SetParam(1, msg.GetParam(1) + " [" + reason +"]");
 		}
 		else
 		{
@@ -125,7 +128,9 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 		msg.GetNick().SetNick(GetModNick());
 		msg.GetNick().SetIdent("znc");
 		msg.GetNick().SetHost("znc.in");
-		msg.SetParam(1, msg.GetTag("system-msg").Trim_n() + " [" + msg.GetParam(1) + "]");
+		CString submessage = msg.GetParam(1).Trim_n();
+		msg.SetParam(1, msg.GetTag("system-msg").Trim_n());
+		if (!submessage.Equals("")) msg.SetParam(1, msg.GetParam(1) + " [" + submessage +"]");
 	}
 
 	CString nick = msg.GetNick().GetNick();
