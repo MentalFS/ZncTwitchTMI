@@ -26,8 +26,6 @@ class TwitchTMI : public CModule
 	CModule::EModRet OnUserRaw(CString &sLine) override;
 	CModule::EModRet OnRawMessage(CMessage &msg) override;
 	CModule::EModRet OnUserJoin(CString &sChannel, CString &sKey) override;
-	CModule::EModRet OnPrivMessage(CTextMessage &Message) override;
-	CModule::EModRet OnChanMessage(CTextMessage &Message) override;
 	CModule::EModRet OnUserTextMessage(CTextMessage &msg) override;
 	bool OnServerCapAvailable(const CString &sCap) override;
 
@@ -66,18 +64,5 @@ class TwitchTMIJob : public CJob
 	CString channel;
 	CString title;
 	bool live;
-};
-
-class GenericJob : public CJob
-{
-	public:
-	GenericJob(std::function<void()> threadFunc, std::function<void()> mainFunc):threadFunc(threadFunc),mainFunc(mainFunc) {}
-
-	void runThread() override { threadFunc(); }
-	void runMain() override { mainFunc(); }
-
-	private:
-	std::function<void()> threadFunc;
-	std::function<void()> mainFunc;
 };
 

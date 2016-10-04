@@ -104,6 +104,11 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 	}
 	else if(msg.GetCommand().Equals("USERSTATE"))
 	{
+		// // Unfortunately this is too noisy
+		// msg.SetCommand("NICK");
+		// msg.GetNick().SetNick(GetUser()->GetNick());
+		// msg.SetParam(0, msg.GetTag("display-name"));
+		// return CModule::CONTINUE;
 		return CModule::HALT;
 	}
 	else if(msg.GetCommand().Equals("ROOMSTATE"))
@@ -116,7 +121,7 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 	}
 	else if(msg.GetCommand().Equals("GLOBALUSERSTATE"))
 	{
-		return CModule::HALT;
+		return CModule::CONTINUE;
 	}
 	else if(msg.GetCommand().Equals("WHISPER"))
 	{
@@ -156,14 +161,6 @@ CModule::EModRet TwitchTMI::OnUserJoin(CString& sChannel, CString& sKey)
 	return CModule::CONTINUE;
 }
 
-CModule::EModRet TwitchTMI::OnPrivMessage(CTextMessage &Message)
-{
-//	if(Message.GetNick().GetNick().Equals("jtv"))
-//		return CModule::HALT;
-
-	return CModule::CONTINUE;
-}
-
 void TwitchTMI::PutModChanNotice(CChan *chan, const CString &msg)
 {
 	std::stringstream ss;
@@ -174,14 +171,6 @@ void TwitchTMI::PutModChanNotice(CChan *chan, const CString &msg)
 
 	if(!chan->AutoClearChanBuffer() || !GetNetwork()->IsUserOnline() || chan->IsDetached())
 		chan->AddBuffer(s + "{text}", msg);
-}
-
-CModule::EModRet TwitchTMI::OnChanMessage(CTextMessage &Message)
-{
-//	if(Message.GetNick().GetNick().Equals("jtv"))
-//		return CModule::HALT;
-
-	return CModule::CONTINUE;
 }
 
 bool TwitchTMI::OnServerCapAvailable(const CString &sCap)
