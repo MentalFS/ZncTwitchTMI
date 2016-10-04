@@ -241,6 +241,14 @@ void TwitchTMIJob::runThread()
 			title = titleVal.asString();
 			title.Trim();
 		}
+
+		Json::Value &gameVal = root["game"];
+		if (gameVal.isString())
+		{
+			CString game = gameVal.asString();
+			game.Trim();
+			title = title + " (" + game + ")";
+		}
 	}
 
 	live = false;
@@ -251,6 +259,11 @@ void TwitchTMIJob::runThread()
 
 		if(!streamVal.isNull())
 			live = true;
+	}
+
+	if (!root.isNull() && !root2.isNull())
+	{
+		title = (live ? "[LIVE] " : "[OFF] ") + title;
 	}
 }
 
