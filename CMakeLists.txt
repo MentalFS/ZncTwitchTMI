@@ -17,6 +17,10 @@ set(twitch_SOURCES
 	json/jsoncpp.cpp
 	json/json.h)
 
+set(autospam_SOURCES
+	autospam.cpp
+	autospam.h)
+
 add_library(twitch MODULE
 	${twitch_SOURCES})
 target_link_libraries(twitch
@@ -33,5 +37,20 @@ target_compile_options(twitch
 set_target_properties(twitch PROPERTIES
 	PREFIX "")
 
+add_library(autospam MODULE
+	${autospam_SOURCES})
+target_link_libraries(autospam
+	${ZNC_LIBRARIES})
+target_include_directories(autospam SYSTEM
+	PRIVATE
+		${ZNC_INCLUDE_DIRS})
+target_compile_options(autospam
+	PRIVATE ${ZNC_DEFINITIONS} -Wno-shadow
+	PUBLIC -fno-strict-aliasing
+	PUBLIC -std=gnu++11)
+set_target_properties(autospam PROPERTIES
+	PREFIX "")
+	
+
 include(GNUInstallDirs)
-install(TARGETS twitch DESTINATION "${CMAKE_INSTALL_LIBDIR}/znc")
+install(TARGETS twitch autospam DESTINATION "${CMAKE_INSTALL_LIBDIR}/znc")

@@ -4,7 +4,6 @@
 #include <znc/Threads.h>
 
 #include <unordered_set>
-#include <functional>
 #include <ctime>
 
 class TwitchTMIUpdateTimer;

@@ -7,8 +7,6 @@
 #include <znc/IRCSock.h>
 #include <znc/version.h>
 
-#include <limits>
-
 #include "twitchtmi.h"
 #include "jload.h"
 
