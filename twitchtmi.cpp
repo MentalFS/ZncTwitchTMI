@@ -245,7 +245,7 @@ void TwitchTMIJob::runThread()
 		{
 			CString game = gameVal.asString();
 			game.Trim();
-			title = title + " (" + game + ")";
+			if (!game.Equals("")) title = title + " (" + game + ")";
 		}
 	}
 
