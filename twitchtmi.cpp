@@ -136,8 +136,10 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 		if (!submessage.Equals("")) msg.SetParam(1, msg.GetParam(1) + " [" + submessage +"]");
 	}
 
-	CString nick = msg.GetNick().GetNick();
+	CString nick = msg.GetNick().GetNick().Trim_n();
 	CString realNick = msg.GetTag("display-name").Trim_n();
+	if (msg.GetCommand().Equals("PRIVMSG") && nick.Equals("jtv"))
+		msg.SetCommand("NOTICE");
 	if (nick.Equals("twitchnotify"))
 		msg.SetCommand("NOTICE");
 	if (nick.Equals("tmi.twitch.tv"))
