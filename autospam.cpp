@@ -17,7 +17,7 @@ AutoSpam::~AutoSpam()
 
 void AutoSpam::RegisterCommands()
 {
-        AddHelpCommand();
+	AddHelpCommand();
 	AddCommand("Spam", static_cast<CModCommand::ModCmdFunc>(&AutoSpam::AddPhrase),
                    "<phrase>",
                    "Adds phrase to be spammed in all channels");
