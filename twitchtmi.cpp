@@ -148,7 +148,7 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 
 CModule::EModRet TwitchTMI::OnUserJoin(CString& sChannel, CString& sKey)
 {
-	CThreadPool::Get().addJob(new TwitchTMIJob(this));
+	// CThreadPool::Get().addJob(new TwitchTMIJob(this));
 
 	return CModule::CONTINUE;
 }
@@ -290,11 +290,13 @@ void TwitchTMIJob::runMain()
 	for (const CString &channel : channels)
 	{
 		const CString &title = titles[channel];
+		if (title.Equals(""))
+			continue;
 
 		CChan *chan = mod->GetNetwork()->FindChan(CString("#") + channel);
 
 		if(!chan)
-			return;
+			continue;
 
 		if(chan->GetTopic() != title)
 		{
