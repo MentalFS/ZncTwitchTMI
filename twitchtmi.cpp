@@ -213,10 +213,12 @@ TwitchTMIJob::TwitchTMIJob(TwitchTMI *mod)
 	}
 }
 
+// TODO: Paging
+// TODO: Move to API v5
 void TwitchTMIJob::runThread()
 {
 	std::stringstream ss;
-	ss << "https://api.twitch.tv/kraken/streams?channel=" << CString(",").Join(channels.begin(), channels.end());
+	ss << "https://api.twitch.tv/kraken/streams?limit=100&channel=" << CString(",").Join(channels.begin(), channels.end());
 
 	CString url = ss.str();
 
