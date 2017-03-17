@@ -102,11 +102,6 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 	}
 	else if(msg.GetCommand().Equals("USERSTATE"))
 	{
-		// // Unfortunately this is too noisy
-		// msg.SetCommand("NICK");
-		// msg.GetNick().SetNick(GetUser()->GetNick());
-		// msg.SetParam(0, msg.GetTag("display-name"));
-		// return CModule::CONTINUE;
 		return CModule::HALT;
 	}
 	else if(msg.GetCommand().Equals("ROOMSTATE"))
@@ -136,7 +131,7 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 		if (!submessage.Equals("")) msg.SetParam(1, msg.GetParam(1) + " [" + submessage +"]");
 	}
 
-	CString nick = msg.GetNick().GetNick().Trim_n();
+	CString nick = msg.GetNick().GetNick();
 	CString realNick = msg.GetTag("display-name").Trim_n();
 	if (msg.GetCommand().Equals("PRIVMSG") && nick.Equals("jtv"))
 		msg.SetCommand("NOTICE");
@@ -147,7 +142,7 @@ CModule::EModRet TwitchTMI::OnRawMessage(CMessage &msg)
 		msg.GetNick().SetIdent("tmi.twitch.tv");
 		msg.GetNick().SetHost("tmi.twitch.tv");
 	}
-	if(realNick != "" && realNick.Equals(nick, CString::CaseInsensitive))
+	if(realNick.Equals(nick, CString::CaseInsensitive))
 		msg.GetNick().SetNick(realNick);
 
 	return CModule::CONTINUE;
