@@ -14,7 +14,7 @@ class AutoSpam : public CModule
 	void RemovePhrase(const CString& cmd);
 
 	bool OnLoad(const CString &args, CString &message) override;
-	CModule::EModRet OnChanMessage(CTextMessage &message) override;
+	CModule::EModRet OnChanTextMessage(CTextMessage &message) override;
 
 	private:
 	void RegisterCommands();

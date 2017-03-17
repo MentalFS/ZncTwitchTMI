@@ -26,7 +26,7 @@ void AutoSpam::RegisterCommands()
                    "Removes phrase from the to-spam list");
 }
 
-CModule::EModRet AutoSpam::OnChanMessage(CTextMessage &message)
+CModule::EModRet AutoSpam::OnChanTextMessage(CTextMessage &message)
 {
 	if(phrases.find(message.GetText()) != phrases.end() && std::time(nullptr) - lastSpam > 10)
 	{
