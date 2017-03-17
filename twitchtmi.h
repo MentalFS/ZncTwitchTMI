@@ -4,6 +4,7 @@
 #include <znc/Threads.h>
 
 #include <unordered_set>
+#include <unordered_map>
 #include <ctime>
 
 class TwitchTMIUpdateTimer;
@@ -53,15 +54,15 @@ class TwitchTMIUpdateTimer : public CTimer
 class TwitchTMIJob : public CJob
 {
 	public:
-	TwitchTMIJob(TwitchTMI *mod, const CString &channel):mod(mod),channel(channel),live(false) {}
+	TwitchTMIJob(TwitchTMI *mod);
 
 	void runThread() override;
 	void runMain() override;
 
 	private:
 	TwitchTMI *mod;
-	CString channel;
-	CString title;
-	bool live;
+	std::unordered_set<CString> channels;
+	std::unordered_map<CString,CString> titles;
+	std::unordered_map<CString,bool> live;
 };
 
